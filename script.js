@@ -1,0 +1,190 @@
+/* ═══════════════════════════════════════════════════════
+   PRABHU DEVA LIVE — JavaScript
+   ═══════════════════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── Configuration ──────────────────────────────────────
+  // Update this URL when your Google Form is ready
+  const GOOGLE_FORM_URL = 'https://forms.gle/3H3BPEoJFobaZbpH6';
+
+  // ── Navigation scroll effect ───────────────────────────
+  const navbar = document.getElementById('main-nav');
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Mobile menu toggle
+  navToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    const spans = navToggle.querySelectorAll('span');
+    if (navLinks.classList.contains('open')) {
+      spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
+      spans[0].style.transform = '';
+      spans[1].style.opacity = '';
+      spans[2].style.transform = '';
+    }
+  });
+
+  // Close mobile menu on link click
+  navLinks.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      const spans = navToggle.querySelectorAll('span');
+      spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+    });
+  });
+
+  // ── Counter animation ─────────────────────────────────
+  function animateCounters() {
+    const counters = document.querySelectorAll('[data-count]');
+    counters.forEach(counter => {
+      const target = parseInt(counter.dataset.count);
+      const duration = 2000;
+      const start = performance.now();
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        counter.textContent = Math.round(target * eased);
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    });
+  }
+
+  // Run counter animation when hero is visible
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounters();
+        heroObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) heroObserver.observe(heroStats);
+
+  // ── Scroll reveal animation ────────────────────────────
+  const revealElements = document.querySelectorAll(
+    '.detail-card, .highlight-card, .step, .contact-card, .about-content-col, .about-image-wrapper, .qr-card, .register-cta'
+  );
+
+  revealElements.forEach(el => el.classList.add('reveal'));
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, index * 100);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // ── QR Code generation ─────────────────────────────────
+  const qrCanvas = document.getElementById('qr-canvas');
+  if (qrCanvas && typeof QRCode !== 'undefined') {
+    QRCode.toCanvas(qrCanvas, GOOGLE_FORM_URL, {
+      width: 180,
+      margin: 1,
+      color: {
+        dark: '#1a1025',
+        light: '#ffffff'
+      }
+    }, (error) => {
+      if (error) {
+        console.warn('QR code generation failed:', error);
+        // Fallback: show placeholder text
+        const placeholder = document.querySelector('.qr-placeholder');
+        if (placeholder) {
+          placeholder.innerHTML = '<p style="color:#666;font-size:14px;text-align:center;">QR Code<br/>Coming Soon</p>';
+        }
+      }
+    });
+  }
+
+  // ── Registration button links ──────────────────────────
+  const registerButtons = document.querySelectorAll('#hero-register-btn, #register-form-btn');
+  registerButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (GOOGLE_FORM_URL.includes('YOUR_FORM_ID')) {
+        e.preventDefault();
+        // Scroll to register section if form not set up yet
+        const registerSection = document.getElementById('register');
+        if (registerSection) {
+          registerSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Open form in new tab
+        btn.href = GOOGLE_FORM_URL;
+        btn.target = '_blank';
+      }
+    });
+  });
+
+  // ── Floating particles ─────────────────────────────────
+  function createParticles() {
+    const container = document.getElementById('hero-particles');
+    if (!container) return;
+
+    const colors = [
+      'hsla(42, 92%, 56%, 0.3)',   // gold
+      'hsla(330, 85%, 55%, 0.2)',   // magenta
+      'hsla(270, 60%, 50%, 0.2)',   // purple
+      'hsla(0, 0%, 100%, 0.1)',     // white
+    ];
+
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      const size = Math.random() * 6 + 2;
+      particle.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${Math.random() * 100}%;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        animation-duration: ${Math.random() * 15 + 10}s;
+        animation-delay: ${Math.random() * -20}s;
+      `;
+      container.appendChild(particle);
+    }
+  }
+
+  createParticles();
+
+  // ── Smooth scroll for anchor links ─────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ── Parallax effect on hero image ──────────────────────
+  const heroImage = document.querySelector('.hero-image-container');
+  if (heroImage && window.innerWidth > 768) {
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const rate = scrolled * 0.3;
+      heroImage.style.transform = `translateY(calc(-50% + ${rate}px))`;
+    }, { passive: true });
+  }
+
+});
