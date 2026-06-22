@@ -94,26 +94,39 @@ document.addEventListener('DOMContentLoaded', () => {
   revealElements.forEach(el => revealObserver.observe(el));
 
   // ── QR Code generation ─────────────────────────────────
-  const qrCanvas = document.getElementById('qr-canvas');
-  if (qrCanvas && typeof QRCode !== 'undefined') {
-    QRCode.toCanvas(qrCanvas, GOOGLE_FORM_URL, {
-      width: 180,
-      margin: 1,
-      color: {
-        dark: '#1a1025',
-        light: '#ffffff'
-      }
-    }, (error) => {
-      if (error) {
-        console.warn('QR code generation failed:', error);
-        // Fallback: show placeholder text
-        const placeholder = document.querySelector('.qr-placeholder');
-        if (placeholder) {
-          placeholder.innerHTML = '<p style="color:#666;font-size:14px;text-align:center;">QR Code<br/>Coming Soon</p>';
+  function generateQR() {
+    const qrCanvas = document.getElementById('qr-canvas');
+    if (!qrCanvas) return;
+
+    if (typeof QRCode !== 'undefined') {
+      QRCode.toCanvas(qrCanvas, GOOGLE_FORM_URL, {
+        width: 180,
+        margin: 1,
+        color: {
+          dark: '#1a1025',
+          light: '#ffffff'
         }
-      }
-    });
+      }, (error) => {
+        if (error) {
+          console.warn('QR canvas failed, using image fallback:', error);
+          useQRFallback();
+        }
+      });
+    } else {
+      // Library not loaded, use image API fallback
+      useQRFallback();
+    }
   }
+
+  function useQRFallback() {
+    const placeholder = document.querySelector('.qr-placeholder');
+    if (placeholder) {
+      const encodedURL = encodeURIComponent(GOOGLE_FORM_URL);
+      placeholder.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodedURL}" alt="Scan to register" style="width:100%;height:100%;object-fit:contain;" />`;
+    }
+  }
+
+  generateQR();
 
   // ── Registration button links ──────────────────────────
   const registerButtons = document.querySelectorAll('#hero-register-btn, #register-form-btn');
