@@ -1041,6 +1041,10 @@ img { max-width: 100%; display: block; }
   .partners-grid { grid-template-columns: repeat(2, 1fr); }
 
   .hero-presenter { justify-content: center; }
+  .hero-presenter-logo { width: 140px; }
+
+  .nav-logo-img { width: 28px; height: 28px; }
+  .logo-text { font-size: 0.95rem; }
 
   .scroll-indicator { display: none; }
 }
@@ -1052,6 +1056,8 @@ img { max-width: 100%; display: block; }
   .hero-stats { gap: 1rem; }
   .about-achievements { grid-template-columns: 1fr; gap: 1rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .hero-presenter-logo { width: 100px; }
+  .hero-presenter-text { font-size: 0.85rem; letter-spacing: 0.15em; }
 }
 
 /* ── Particle styles ───────────────────────────────────── */
