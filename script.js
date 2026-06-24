@@ -208,54 +208,82 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Save / Share QR Code ─────────────────────────────────
   const qrImgBtn = document.getElementById('send-qr-img-btn');
   if (qrImgBtn) {
-    qrImgBtn.addEventListener('click', async () => {
+    qrImgBtn.addEventListener('click', function() {
+      console.log('Save QR button clicked');
       const label = qrImgBtn.querySelector('span');
       const origText = label.textContent;
       const toast = document.getElementById('send-toast');
-      const qrImgSrc = document.querySelector('.qr-placeholder img')?.src
-                     || 'assets/qr-register.png';
 
-      // Try native share with image file (mobile)
-      try {
-        const response = await fetch(qrImgSrc);
-        const blob = await response.blob();
-        const file = new File([blob], 'prabhu-deva-register-qr.png', { type: 'image/png' });
-
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          label.textContent = 'Sharing...';
-          await navigator.share({
-            title: shareTitle,
-            text: shareText + '\n\n' + regLink,
-            files: [file],
-          });
-          label.textContent = 'Shared!';
-          setTimeout(() => { label.textContent = origText; }, 2000);
-          return;
-        }
-      } catch (err) {
-        if (err.name === 'AbortError') {
-          label.textContent = origText;
-          return;
-        }
-        // Share not available or failed — fall through to download
-      }
-
-      // Fallback: direct download
       label.textContent = 'Saving...';
-      const a = document.createElement('a');
-      a.href = qrImgSrc;
-      a.download = 'prabhu-deva-register-qr.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
 
-      label.textContent = 'Saved!';
-      if (toast) {
-        toast.textContent = 'QR code downloaded! Send it via text to your phone 📱';
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3500);
+      // Get the QR image element
+      const qrImg = document.querySelector('.qr-placeholder img');
+
+      if (qrImg && qrImg.src) {
+        // Method 1: Draw onto canvas and download as data URL
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = 400;
+          canvas.height = 400;
+          const ctx = canvas.getContext('2d');
+
+          // White background
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, 400, 400);
+
+          // Draw the QR image
+          const img = new Image();
+          img.onload = function() {
+            ctx.drawImage(img, 20, 20, 360, 360);
+
+            // Convert to data URL and trigger download
+            const dataURL = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = dataURL;
+            a.download = 'prabhu-deva-register-qr.png';
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            label.textContent = 'Saved!';
+            if (toast) {
+              toast.textContent = 'QR code downloaded! Send it via text to your phone 📱';
+              toast.classList.add('show');
+              setTimeout(function() { toast.classList.remove('show'); }, 3500);
+            }
+            setTimeout(function() { label.textContent = origText; }, 2500);
+            console.log('QR code downloaded via canvas');
+          };
+
+          img.onerror = function() {
+            console.log('Canvas method failed, opening in new tab');
+            // Fallback: open the QR image in a new tab
+            window.open(qrImg.src, '_blank');
+            label.textContent = 'Opened!';
+            if (toast) {
+              toast.textContent = 'QR code opened in new tab — right-click to save 📱';
+              toast.classList.add('show');
+              setTimeout(function() { toast.classList.remove('show'); }, 3500);
+            }
+            setTimeout(function() { label.textContent = origText; }, 2500);
+          };
+
+          // Load without crossOrigin to avoid CORS issues with same-origin
+          img.src = qrImg.src;
+
+        } catch (err) {
+          console.error('Canvas error:', err);
+          // Ultimate fallback: just open the image
+          window.open(qrImg.src, '_blank');
+          label.textContent = origText;
+        }
+      } else {
+        // No QR image found — open the asset directly
+        console.log('No QR image found, opening asset');
+        window.open('assets/qr-register.png', '_blank');
+        label.textContent = origText;
       }
-      setTimeout(() => { label.textContent = origText; }, 2500);
     });
   }
 
