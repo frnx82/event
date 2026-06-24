@@ -205,20 +205,111 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareTitle = 'Prabhu Deva Live in Raleigh NC — Register as a Dancer!';
   const shareText = 'Register now to dance alongside Prabhu Deva at the live event in Raleigh, NC! 💃🕺';
 
-  // SMS button
+  /**
+   * Convert the QR code image to a Blob (PNG).
+   * Works with <img> or <canvas> inside .qr-placeholder.
+   */
+  function getQRImageBlob() {
+    return new Promise((resolve, reject) => {
+      const placeholder = document.querySelector('.qr-placeholder');
+      if (!placeholder) return reject(new Error('No QR placeholder'));
+
+      const img = placeholder.querySelector('img');
+      const canvas = placeholder.querySelector('canvas');
+
+      const cvs = document.createElement('canvas');
+      const ctx = cvs.getContext('2d');
+      const size = 512; // export at higher resolution
+      cvs.width = size;
+      cvs.height = size;
+
+      // White background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+
+      if (canvas) {
+        ctx.drawImage(canvas, 0, 0, size, size);
+        cvs.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/png');
+      } else if (img) {
+        const tempImg = new Image();
+        tempImg.crossOrigin = 'anonymous';
+        tempImg.onload = () => {
+          ctx.drawImage(tempImg, 16, 16, size - 32, size - 32);
+          cvs.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/png');
+        };
+        tempImg.onerror = () => reject(new Error('Image load failed'));
+        tempImg.src = img.src;
+      } else {
+        reject(new Error('No QR image or canvas found'));
+      }
+    });
+  }
+
+  // ── PRIMARY: Send QR image to phone ─────────────────────
+  const qrImgBtn = document.getElementById('send-qr-img-btn');
+  if (qrImgBtn) {
+    qrImgBtn.addEventListener('click', async () => {
+      const label = qrImgBtn.querySelector('span');
+      const origText = label.textContent;
+      label.textContent = 'Preparing...';
+
+      try {
+        const blob = await getQRImageBlob();
+        const file = new File([blob], 'prabhu-deva-register-qr.png', { type: 'image/png' });
+
+        // Try Web Share API with file (works on mobile)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: shareTitle,
+            text: shareText + '\n\n' + regLink,
+            files: [file],
+          });
+          label.textContent = 'Sent!';
+          setTimeout(() => { label.textContent = origText; }, 2000);
+        } else {
+          // Fallback: download the QR image
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'prabhu-deva-register-qr.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          label.textContent = 'Downloaded!';
+          const toast = document.getElementById('send-toast');
+          if (toast) {
+            toast.textContent = 'QR code saved! Text it to your phone 📱';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+          }
+          setTimeout(() => { label.textContent = origText; }, 2500);
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.log('QR share failed:', err);
+          label.textContent = origText;
+        } else {
+          label.textContent = origText;
+        }
+      }
+    });
+  }
+
+  // ── SMS button (sends link as text) ─────────────────────
   const smsBtn = document.getElementById('send-sms-btn');
   if (smsBtn) {
     smsBtn.addEventListener('click', (e) => {
       e.preventDefault();
       const message = encodeURIComponent(`${shareText}\n\n${regLink}`);
-      // Use sms: protocol — works on iOS and Android
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
       const sep = isIOS ? '&' : '?';
       window.open(`sms:${sep}body=${message}`, '_self');
     });
   }
 
-  // Email button
+  // ── Email button ────────────────────────────────────────
   const emailBtn = document.getElementById('send-email-btn');
   if (emailBtn) {
     emailBtn.addEventListener('click', (e) => {
@@ -229,35 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Native Share API button
-  const shareBtn = document.getElementById('send-share-btn');
-  if (shareBtn) {
-    if (navigator.share) {
-      shareBtn.addEventListener('click', async () => {
-        try {
-          await navigator.share({
-            title: shareTitle,
-            text: shareText,
-            url: regLink,
-          });
-        } catch (err) {
-          if (err.name !== 'AbortError') {
-            console.log('Share failed:', err);
-          }
-        }
-      });
-    } else {
-      // Fallback: hide share button on desktop browsers without Web Share API
-      shareBtn.style.display = 'none';
-      // Adjust grid to single row for remaining 3 buttons
-      const sendOptions = document.querySelector('.send-options');
-      if (sendOptions) {
-        sendOptions.style.gridTemplateColumns = 'repeat(3, 1fr)';
-      }
-    }
-  }
-
-  // Copy Link button
+  // ── Copy Link button ───────────────────────────────────
   const copyBtn = document.getElementById('send-copy-btn');
   const toast = document.getElementById('send-toast');
   if (copyBtn) {
@@ -265,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         await navigator.clipboard.writeText(regLink);
       } catch {
-        // Fallback for older browsers
         const ta = document.createElement('textarea');
         ta.value = regLink;
         ta.style.position = 'fixed';
@@ -276,19 +338,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(ta);
       }
 
-      // Visual feedback
       copyBtn.classList.add('copied');
       const label = copyBtn.querySelector('span');
       const origText = label.textContent;
       label.textContent = 'Copied!';
 
-      // Show toast
       if (toast) {
+        toast.textContent = 'Link copied to clipboard! ✓';
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2500);
       }
 
-      // Reset button after delay
       setTimeout(() => {
         copyBtn.classList.remove('copied');
         label.textContent = origText;
