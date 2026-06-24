@@ -731,6 +731,124 @@ img { max-width: 100%; display: block; }
   color: var(--text-muted);
 }
 
+/* ── Send to Phone Widget ──────────────────────────────── */
+.send-to-phone {
+  margin-top: 1.25rem;
+}
+
+.send-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.send-divider::before,
+.send-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsla(0, 0%, 100%, 0.12), transparent);
+}
+
+.send-divider span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.send-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.send-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
+  background: hsla(0, 0%, 100%, 0.04);
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+
+.send-btn:hover {
+  background: hsla(0, 0%, 100%, 0.08);
+  border-color: hsla(0, 0%, 100%, 0.2);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.send-btn svg {
+  flex-shrink: 0;
+}
+
+.send-btn-sms:hover {
+  border-color: hsl(142, 60%, 45%);
+  color: hsl(142, 60%, 65%);
+  background: hsla(142, 60%, 45%, 0.1);
+}
+
+.send-btn-email:hover {
+  border-color: hsl(210, 80%, 55%);
+  color: hsl(210, 80%, 70%);
+  background: hsla(210, 80%, 55%, 0.1);
+}
+
+.send-btn-share:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: hsla(42, 92%, 56%, 0.1);
+}
+
+.send-btn-copy:hover {
+  border-color: hsl(280, 60%, 55%);
+  color: hsl(280, 60%, 70%);
+  background: hsla(280, 60%, 55%, 0.1);
+}
+
+.send-btn-copy.copied {
+  border-color: hsl(142, 60%, 45%);
+  color: hsl(142, 60%, 65%);
+  background: hsla(142, 60%, 45%, 0.12);
+}
+
+.send-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: hsl(142, 50%, 20%);
+  color: hsl(142, 60%, 75%);
+  border: 1px solid hsl(142, 50%, 30%);
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s ease;
+  z-index: 9999;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.send-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* ── Contact Section ───────────────────────────────────── */
 .contact-section {
   background: var(--bg-secondary);

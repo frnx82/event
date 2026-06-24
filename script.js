@@ -200,4 +200,100 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
+  // ── Send to Phone functionality ───────────────────────
+  const regLink = GOOGLE_FORM_URL;
+  const shareTitle = 'Prabhu Deva Live in Raleigh NC — Register as a Dancer!';
+  const shareText = 'Register now to dance alongside Prabhu Deva at the live event in Raleigh, NC! 💃🕺';
+
+  // SMS button
+  const smsBtn = document.getElementById('send-sms-btn');
+  if (smsBtn) {
+    smsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const message = encodeURIComponent(`${shareText}\n\n${regLink}`);
+      // Use sms: protocol — works on iOS and Android
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const sep = isIOS ? '&' : '?';
+      window.open(`sms:${sep}body=${message}`, '_self');
+    });
+  }
+
+  // Email button
+  const emailBtn = document.getElementById('send-email-btn');
+  if (emailBtn) {
+    emailBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const subject = encodeURIComponent(shareTitle);
+      const body = encodeURIComponent(`${shareText}\n\nRegister here:\n${regLink}\n\nVisit: https://fusionvibez-studios.com`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    });
+  }
+
+  // Native Share API button
+  const shareBtn = document.getElementById('send-share-btn');
+  if (shareBtn) {
+    if (navigator.share) {
+      shareBtn.addEventListener('click', async () => {
+        try {
+          await navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: regLink,
+          });
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.log('Share failed:', err);
+          }
+        }
+      });
+    } else {
+      // Fallback: hide share button on desktop browsers without Web Share API
+      shareBtn.style.display = 'none';
+      // Adjust grid to single row for remaining 3 buttons
+      const sendOptions = document.querySelector('.send-options');
+      if (sendOptions) {
+        sendOptions.style.gridTemplateColumns = 'repeat(3, 1fr)';
+      }
+    }
+  }
+
+  // Copy Link button
+  const copyBtn = document.getElementById('send-copy-btn');
+  const toast = document.getElementById('send-toast');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(regLink);
+      } catch {
+        // Fallback for older browsers
+        const ta = document.createElement('textarea');
+        ta.value = regLink;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+
+      // Visual feedback
+      copyBtn.classList.add('copied');
+      const label = copyBtn.querySelector('span');
+      const origText = label.textContent;
+      label.textContent = 'Copied!';
+
+      // Show toast
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      // Reset button after delay
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        label.textContent = origText;
+      }, 2000);
+    });
+  }
+
 });
