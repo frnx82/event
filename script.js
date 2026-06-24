@@ -205,95 +205,57 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareTitle = 'Prabhu Deva Live in Raleigh NC — Register as a Dancer!';
   const shareText = 'Register now to dance alongside Prabhu Deva at the live event in Raleigh, NC! 💃🕺';
 
-  /**
-   * Convert the QR code image to a Blob (PNG).
-   * Works with <img> or <canvas> inside .qr-placeholder.
-   */
-  function getQRImageBlob() {
-    return new Promise((resolve, reject) => {
-      const placeholder = document.querySelector('.qr-placeholder');
-      if (!placeholder) return reject(new Error('No QR placeholder'));
-
-      const img = placeholder.querySelector('img');
-      const canvas = placeholder.querySelector('canvas');
-
-      const cvs = document.createElement('canvas');
-      const ctx = cvs.getContext('2d');
-      const size = 512; // export at higher resolution
-      cvs.width = size;
-      cvs.height = size;
-
-      // White background
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, size, size);
-
-      if (canvas) {
-        ctx.drawImage(canvas, 0, 0, size, size);
-        cvs.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/png');
-      } else if (img) {
-        const tempImg = new Image();
-        tempImg.crossOrigin = 'anonymous';
-        tempImg.onload = () => {
-          ctx.drawImage(tempImg, 16, 16, size - 32, size - 32);
-          cvs.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/png');
-        };
-        tempImg.onerror = () => reject(new Error('Image load failed'));
-        tempImg.src = img.src;
-      } else {
-        reject(new Error('No QR image or canvas found'));
-      }
-    });
-  }
-
-  // ── PRIMARY: Send QR image to phone ─────────────────────
+  // ── Save / Share QR Code ─────────────────────────────────
   const qrImgBtn = document.getElementById('send-qr-img-btn');
   if (qrImgBtn) {
     qrImgBtn.addEventListener('click', async () => {
       const label = qrImgBtn.querySelector('span');
       const origText = label.textContent;
-      label.textContent = 'Preparing...';
+      const toast = document.getElementById('send-toast');
+      const qrImgSrc = document.querySelector('.qr-placeholder img')?.src
+                     || 'assets/qr-register.png';
 
+      // Try native share with image file (mobile)
       try {
-        const blob = await getQRImageBlob();
+        const response = await fetch(qrImgSrc);
+        const blob = await response.blob();
         const file = new File([blob], 'prabhu-deva-register-qr.png', { type: 'image/png' });
 
-        // Try Web Share API with file (works on mobile)
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          label.textContent = 'Sharing...';
           await navigator.share({
             title: shareTitle,
             text: shareText + '\n\n' + regLink,
             files: [file],
           });
-          label.textContent = 'Sent!';
+          label.textContent = 'Shared!';
           setTimeout(() => { label.textContent = origText; }, 2000);
-        } else {
-          // Fallback: download the QR image
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'prabhu-deva-register-qr.png';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-
-          label.textContent = 'Downloaded!';
-          const toast = document.getElementById('send-toast');
-          if (toast) {
-            toast.textContent = 'QR code saved! Text it to your phone 📱';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-          }
-          setTimeout(() => { label.textContent = origText; }, 2500);
+          return;
         }
       } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.log('QR share failed:', err);
+        if (err.name === 'AbortError') {
           label.textContent = origText;
-        } else {
-          label.textContent = origText;
+          return;
         }
+        // Share not available or failed — fall through to download
       }
+
+      // Fallback: direct download
+      label.textContent = 'Saving...';
+      const a = document.createElement('a');
+      a.href = qrImgSrc;
+      a.download = 'prabhu-deva-register-qr.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      label.textContent = 'Saved!';
+      if (toast) {
+        toast.textContent = 'QR code downloaded! Send it via text to your phone 📱';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+      }
+      setTimeout(() => { label.textContent = origText; }, 2500);
     });
   }
 

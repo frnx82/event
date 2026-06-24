@@ -760,42 +760,16 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
-/* Primary: Send QR to Phone button */
-.send-btn-qr-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  width: 100%;
-  padding: 0.85rem 1.25rem;
-  margin-bottom: 0.75rem;
-  border-radius: 10px;
-  border: 1px solid hsla(42, 80%, 50%, 0.4);
-  background: linear-gradient(135deg, hsla(42, 80%, 50%, 0.12), hsla(42, 80%, 50%, 0.05));
+/* Primary: Send QR to Phone button — same style as others but gold accent */
+.send-btn-qr:hover {
+  border-color: var(--accent-primary, hsl(42, 80%, 50%));
   color: hsl(42, 80%, 70%);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-}
-
-.send-btn-qr-primary:hover {
-  background: linear-gradient(135deg, hsla(42, 80%, 50%, 0.22), hsla(42, 80%, 50%, 0.1));
-  border-color: hsla(42, 80%, 50%, 0.6);
-  color: hsl(42, 85%, 78%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px hsla(42, 80%, 50%, 0.15);
-}
-
-.send-btn-qr-primary svg {
-  flex-shrink: 0;
+  background: hsla(42, 80%, 50%, 0.1);
 }
 
 .send-options {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
 }
 
