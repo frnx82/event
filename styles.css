@@ -953,6 +953,26 @@ img { max-width: 100%; display: block; }
   text-align: center;
 }
 
+.hero-presenter-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.hero-presenter-ampersand {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold), var(--magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-presenter-logo-secondary {
+  filter: drop-shadow(0 0 15px hsla(100, 50%, 50%, 0.3));
+}
+
 .hero-presenter-logo {
   width: 280px;
   height: auto;
@@ -1177,6 +1197,8 @@ img { max-width: 100%; display: block; }
   .logo-text { font-size: 0.95rem; }
 
   .scroll-indicator { display: none; }
+  .hero-presenter-logos { gap: 1rem; }
+  .hero-presenter-ampersand { font-size: 1.5rem; }
 }
 
 @media (max-width: 480px) {
@@ -1186,8 +1208,10 @@ img { max-width: 100%; display: block; }
   .hero-stats { gap: 1rem; }
   .about-achievements { grid-template-columns: 1fr; gap: 1rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .hero-presenter-logo { width: 180px; }
+  .hero-presenter-logo { width: 150px; }
   .hero-presenter-text { font-size: 0.85rem; letter-spacing: 0.15em; }
+  .hero-presenter-logos { gap: 0.75rem; }
+  .hero-presenter-ampersand { font-size: 1.2rem; }
 }
 
 /* ── Particle styles ───────────────────────────────────── */
