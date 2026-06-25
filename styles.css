@@ -43,6 +43,15 @@
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Branded italic Z in VIBEZ ────────────────────────── */
+.logo-text em,
+.partner-name em,
+.footer-logo em,
+.footer-copy em {
+  font-size: 1.15em;
+  font-style: italic;
+}
+
 /* ── Reset & Base ──────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
