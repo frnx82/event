@@ -34,8 +34,8 @@
   --container-width: 1200px;
 
   /* Typography */
-  --font-primary: 'Outfit', sans-serif;
-  --font-display: 'Playfair Display', serif;
+  --font-primary: 'Raleway', sans-serif;
+  --font-display: 'Cinzel', serif;
 
   /* Misc */
   --border-radius: 16px;
@@ -792,7 +792,7 @@ img { max-width: 100%; display: block; }
   border: 1px solid hsla(0, 0%, 100%, 0.1);
   background: hsla(0, 0%, 100%, 0.04);
   color: var(--text-secondary);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
