@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Configuration ──────────────────────────────────────
   // Update this URL when your Google Form is ready
-  const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/1fAJ8e3Zav8EIvgYQ-yDMa4LYRp40fxwBvkgvXftXvo8/viewform';
+  const GOOGLE_FORM_URL = 'https://forms.gle/uiRLZmvvHZSkJav46';
 
   // ── Navigation scroll effect ───────────────────────────
   const navbar = document.getElementById('main-nav');
