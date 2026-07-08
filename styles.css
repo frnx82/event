@@ -140,6 +140,88 @@ img { max-width: 100%; display: block; }
   50% { box-shadow: 0 4px 40px hsla(330, 85%, 55%, 0.6), 0 0 80px hsla(42, 92%, 56%, 0.2); }
 }
 
+/* ── Urgency Badge (Blinker) ──────────────────────────── */
+.cta-urgency {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  background: hsla(0, 85%, 50%, 0.15);
+  border: 1px solid hsla(0, 85%, 50%, 0.5);
+  margin-bottom: 1rem;
+  animation: urgency-blink 1.5s ease-in-out infinite;
+}
+.urgency-icon {
+  font-size: 1.1rem;
+  animation: flame-flicker 0.6s ease-in-out infinite alternate;
+}
+.urgency-text {
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(0, 85%, 65%);
+  animation: text-blink 1.5s ease-in-out infinite;
+}
+@keyframes urgency-blink {
+  0%, 100% {
+    background: hsla(0, 85%, 50%, 0.08);
+    border-color: hsla(0, 85%, 50%, 0.3);
+    box-shadow: 0 0 0 0 hsla(0, 85%, 50%, 0);
+  }
+  50% {
+    background: hsla(0, 85%, 50%, 0.25);
+    border-color: hsla(0, 85%, 60%, 0.8);
+    box-shadow: 0 0 24px 6px hsla(0, 85%, 50%, 0.25), 0 0 60px 10px hsla(0, 85%, 50%, 0.08);
+  }
+}
+@keyframes text-blink {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; color: hsl(0, 90%, 70%); }
+}
+@keyframes flame-flicker {
+  0% { transform: scale(1) rotate(-3deg); }
+  100% { transform: scale(1.15) rotate(3deg); }
+}
+
+/* ── CTA Buttons Row ──────────────────────────────────── */
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Tickets Button ───────────────────────────────────── */
+.btn-tickets {
+  background: linear-gradient(135deg, hsla(42, 92%, 56%, 0.15), hsla(42, 92%, 56%, 0.05));
+  color: var(--gold);
+  border: 2px solid hsla(42, 92%, 56%, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+.btn-tickets::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, hsla(42, 92%, 56%, 0.1), transparent);
+  transform: translateX(-100%);
+  animation: ticket-shimmer 3s ease-in-out infinite;
+}
+.btn-tickets:hover {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, hsla(42, 92%, 56%, 0.25), hsla(42, 92%, 56%, 0.1));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px hsla(42, 92%, 56%, 0.2);
+}
+.btn-tickets-icon { font-size: 1.1rem; }
+@keyframes ticket-shimmer {
+  0% { transform: translateX(-100%); }
+  50%, 100% { transform: translateX(100%); }
+}
+
 /* ── Navigation ────────────────────────────────────────── */
 .navbar {
   position: fixed;
@@ -327,7 +409,7 @@ img { max-width: 100%; display: block; }
   margin-bottom: 2rem;
 }
 
-.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+.hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 3rem; }
 
 .hero-stats {
   display: flex;
@@ -1227,7 +1309,7 @@ img { max-width: 100%; display: block; }
   }
 
   .hero-content { text-align: center; }
-  .hero-cta { justify-content: center; }
+  .hero-cta { align-items: center; }
   .hero-stats { justify-content: center; }
 
   .hero-subtitle { margin: 0 auto 2rem; }
