@@ -1156,6 +1156,144 @@ img { max-width: 100%; display: block; }
   text-shadow: 0 0 20px hsla(42, 92%, 56%, 0.3);
 }
 
+/* ── Artist Lineup Section ────────────────────────────── */
+.lineup-section {
+  background:
+    radial-gradient(circle at 20% 60%, hsla(330, 80%, 30%, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, hsla(42, 80%, 50%, 0.06) 0%, transparent 50%),
+    var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.lineup-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsla(42, 92%, 56%, 0.3), transparent);
+}
+
+.lineup-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+
+.artist-card {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+}
+
+.artist-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius);
+  padding: 2px;
+  background: linear-gradient(160deg, hsla(42, 92%, 56%, 0.4), transparent 40%, transparent 60%, hsla(330, 85%, 55%, 0.4));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.artist-card:hover::before { opacity: 1; }
+
+.artist-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+}
+
+.artist-card:hover .artist-img {
+  transform: scale(1.08);
+  filter: brightness(0.6);
+}
+
+.artist-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, hsla(260, 40%, 4%, 0.95) 0%, hsla(260, 40%, 4%, 0.6) 25%, transparent 55%);
+  z-index: 1;
+  transition: background 0.4s ease;
+}
+
+.artist-card:hover .artist-overlay {
+  background: linear-gradient(to top, hsla(260, 40%, 4%, 0.98) 0%, hsla(260, 40%, 4%, 0.75) 35%, hsla(260, 40%, 4%, 0.3) 70%);
+}
+
+.artist-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  z-index: 2;
+}
+
+.artist-name {
+  font-family: var(--font-primary);
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.artist-card:hover .artist-name { color: var(--gold-light); }
+
+.artist-role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+}
+
+.artist-card:hover .artist-role {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--magenta-light);
+}
+
+.artist-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  z-index: 3;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.artist-card:hover .artist-accent { transform: scaleX(1); }
+
+/* Touch devices: always show info */
+@media (hover: none) {
+  .artist-role { opacity: 1; transform: translateY(0); color: var(--magenta-light); }
+  .artist-card::before { opacity: 1; }
+  .artist-accent { transform: scaleX(1); }
+  .artist-img { filter: brightness(0.7); }
+  .artist-name { color: var(--gold-light); }
+}
+
 /* ── NC Partners Section ──────────────────────────────── */
 .partners-section {
   background:
@@ -1286,6 +1424,7 @@ img { max-width: 100%; display: block; }
 
   .details-grid { grid-template-columns: repeat(2, 1fr); }
   .partners-grid { grid-template-columns: repeat(3, 1fr); }
+  .lineup-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1360,6 +1499,8 @@ img { max-width: 100%; display: block; }
   .register-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .partners-grid { grid-template-columns: repeat(2, 1fr); }
+  .lineup-grid { grid-template-columns: repeat(2, 1fr); }
+  .artist-info { padding: 1rem; }
 
   .hero-presenter { justify-content: center; }
   .hero-presenter-logo { width: 170px; }
@@ -1379,6 +1520,10 @@ img { max-width: 100%; display: block; }
   .hero-stats { gap: 1rem; }
   .about-achievements { grid-template-columns: 1fr; gap: 1rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .lineup-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .artist-name { font-size: 0.9rem; }
+  .artist-role { font-size: 0.7rem; }
+  .artist-info { padding: 0.75rem; }
   .hero-presenter-logo { width: 130px; }
   .hero-presenter-text { font-size: 0.85rem; letter-spacing: 0.15em; }
   .hero-presenter-logos { gap: 0.75rem; }
