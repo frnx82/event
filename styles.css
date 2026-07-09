@@ -1319,18 +1319,19 @@ img { max-width: 100%; display: block; }
   .hero-subtitle { margin: 0 auto 2rem; }
 
   .hero-image-container {
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-    width: 80%;
-    max-width: 400px;
-    margin: 2rem auto 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    opacity: 0.4;
   }
 
   .hero-image {
-    mask-image: none;
-    -webkit-mask-image: none;
+    mask-image: linear-gradient(to top, transparent 5%, black 40%);
+    -webkit-mask-image: linear-gradient(to top, transparent 5%, black 40%);
   }
 
   .about-grid { grid-template-columns: 1fr; gap: 2rem; }
