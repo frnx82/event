@@ -606,7 +606,7 @@ img { max-width: 100%; display: block; }
 .about-image-badge {
   position: absolute;
   bottom: 1rem;
-  left: 1rem;
+  right: 1rem;
   background: hsla(0, 0%, 0%, 0.7);
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius-sm);
