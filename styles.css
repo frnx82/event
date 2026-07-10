@@ -562,21 +562,20 @@ img { max-width: 100%; display: block; }
 /* ── Video Sound Toggle ──────────────────────────────── */
 .video-sound-toggle {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.85rem;
-  border-radius: 50px;
-  border: 1px solid hsla(0, 0%, 100%, 0.2);
-  background: hsla(0, 0%, 0%, 0.6);
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid hsla(0, 0%, 100%, 0.25);
+  background: hsla(0, 0%, 0%, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #fff;
-  font-family: var(--font-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
   cursor: pointer;
   z-index: 5;
   transition: all var(--transition);
@@ -586,17 +585,17 @@ img { max-width: 100%; display: block; }
 .video-sound-toggle:hover {
   background: hsla(0, 0%, 0%, 0.8);
   border-color: var(--gold);
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .video-sound-toggle.unmuted {
   animation: none;
   border-color: var(--gold);
-  background: hsla(42, 92%, 56%, 0.15);
+  background: hsla(42, 92%, 56%, 0.2);
 }
 
-.sound-icon-off, .sound-icon-on { font-size: 1rem; }
-.sound-label { letter-spacing: 0.02em; }
+.sound-icon-off, .sound-icon-on { font-size: 1.1rem; line-height: 1; }
+.sound-label { display: none; }
 
 @keyframes sound-nudge {
   0%, 100% { box-shadow: 0 0 0 0 hsla(0, 0%, 100%, 0.2); }
@@ -605,16 +604,16 @@ img { max-width: 100%; display: block; }
 
 .about-image-badge {
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: 0.6rem;
+  right: 0.6rem;
   background: hsla(0, 0%, 0%, 0.7);
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius-sm);
-  padding: 0.75rem 1rem;
+  padding: 0.4rem 0.7rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
+  gap: 0.35rem;
+  font-size: 0.7rem;
   font-weight: 600;
   border: 1px solid hsla(42, 92%, 56%, 0.3);
 }
