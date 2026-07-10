@@ -346,4 +346,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+
+  // ── Video Sound Toggle ──────────────────────────────────
+  const aboutVideo = document.getElementById('about-video');
+  const soundToggle = document.getElementById('video-sound-toggle');
+  if (aboutVideo && soundToggle) {
+    const iconOff = soundToggle.querySelector('.sound-icon-off');
+    const iconOn = soundToggle.querySelector('.sound-icon-on');
+    const label = soundToggle.querySelector('.sound-label');
+
+    soundToggle.addEventListener('click', () => {
+      aboutVideo.muted = !aboutVideo.muted;
+      if (aboutVideo.muted) {
+        iconOff.style.display = '';
+        iconOn.style.display = 'none';
+        label.textContent = 'Tap for sound';
+        soundToggle.classList.remove('unmuted');
+      } else {
+        iconOff.style.display = 'none';
+        iconOn.style.display = '';
+        label.textContent = 'Sound on';
+        soundToggle.classList.add('unmuted');
+      }
+    });
+
+    // Auto-mute when video scrolls out of view
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting && !aboutVideo.muted) {
+          aboutVideo.muted = true;
+          iconOff.style.display = '';
+          iconOn.style.display = 'none';
+          label.textContent = 'Tap for sound';
+          soundToggle.classList.remove('unmuted');
+        }
+      });
+    }, { threshold: 0.2 });
+    videoObserver.observe(aboutVideo);
+  }
+
 });
