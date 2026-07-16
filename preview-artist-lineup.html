@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artist Lineup — Instagram Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: hsl(42, 92%, 56%);
+      --gold-light: hsl(42, 100%, 70%);
+      --magenta: hsl(330, 85%, 55%);
+      --magenta-light: hsl(330, 90%, 70%);
+      --bg-secondary: hsl(260, 35%, 10%);
+      --text-primary: hsl(0, 0%, 95%);
+      --text-muted: hsl(0, 0%, 50%);
+      --gradient-primary: linear-gradient(135deg, var(--gold), var(--magenta));
+      --font-primary: 'Raleway', sans-serif;
+      --border-radius: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-primary);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+    .text-gradient {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .lineup-section { padding: 4rem 0; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-tag { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: inline-block; }
+    .section-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; }
+
+    .lineup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* ── Artist Card ── */
+    .artist-card {
+      position: relative;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+      cursor: pointer;
+    }
+    .artist-card a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .artist-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--border-radius);
+      padding: 2px;
+      background: linear-gradient(160deg, hsla(42, 92%, 56%, 0.4), transparent 40%, transparent 60%, hsla(330, 85%, 55%, 0.4));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .artist-card:hover::before { opacity: 1; }
+
+    .artist-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+    }
+    .artist-card:hover .artist-img {
+      transform: scale(1.08);
+      filter: brightness(0.5);
+    }
+
+    .artist-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, hsla(260, 40%, 4%, 0.95) 0%, hsla(260, 40%, 4%, 0.6) 25%, transparent 55%);
+      z-index: 1;
+      transition: background 0.4s ease;
+    }
+    .artist-card:hover .artist-overlay {
+      background: linear-gradient(to top, hsla(260, 40%, 4%, 0.98) 0%, hsla(260, 40%, 4%, 0.75) 35%, hsla(260, 40%, 4%, 0.3) 70%);
+    }
+
+    .artist-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      z-index: 2;
+    }
+    .artist-name {
+      font-size: clamp(1rem, 1.3vw, 1.25rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      transition: color 0.3s ease;
+    }
+    .artist-card:hover .artist-name { color: var(--gold-light); }
+
+    .artist-role {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+    }
+    .artist-card:hover .artist-role {
+      opacity: 1;
+      transform: translateY(0);
+      color: var(--magenta-light);
+    }
+
+    .artist-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+      z-index: 3;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .artist-card:hover .artist-accent { transform: scaleX(1); }
+
+    /* ── Instagram Icon — always visible, top-right ── */
+    .artist-ig {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      z-index: 4;
+      opacity: 0.2;
+      transition: all 0.3s ease;
+    }
+    .artist-card:hover .artist-ig {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .ig-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(220, 39, 67, 0.35);
+    }
+    .ig-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: #fff;
+    }
+
+    /* ── Touch devices ── */
+    @media (hover: none) {
+      .artist-role { opacity: 1; transform: translateY(0); color: var(--magenta-light); }
+      .artist-card::before { opacity: 1; }
+      .artist-accent { transform: scaleX(1); }
+      .artist-img { filter: brightness(0.7); }
+      .artist-name { color: var(--gold-light); }
+      .artist-ig { opacity: 0.8; }
+    }
+
+    @media (max-width: 768px) {
+      .lineup-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .ig-icon { width: 24px; height: 24px; border-radius: 6px; }
+      .ig-icon svg { width: 14px; height: 14px; }
+      .artist-ig { top: 0.5rem; right: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="lineup-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">STAR PERFORMERS</span>
+      <h2 class="section-title">Artist <span class="text-gradient">Lineup</span></h2>
+    </div>
+
+    <div class="lineup-grid">
+
+      <!-- HariKumar -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/harikumaractor/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/harikumar.webp" alt="HariKumar" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">HariKumar</h3>
+            <p class="artist-role">Show Director</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Lauren Gottlieb -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/laurengottlieb/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/lauren.png" alt="Lauren Gottlieb" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">Lauren Gottlieb</h3>
+            <p class="artist-role">Bollywood Dance Star</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Saanve Megghana -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/saanve.megghana/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/saanvee.jpeg" alt="Saanve Megghana" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">Saanve Megghana</h3>
+            <p class="artist-role">Actor</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Harini Nilakantan -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/__hxrini_/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/harini1-cropped.jpeg" alt="Harini Nilakantan" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">Harini Nilakantan</h3>
+            <p class="artist-role">Global Dance Icon</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Natasha Sherpa -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/natasha.sherpa/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/natasha.webp" alt="Natasha Sherpa" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">Natasha Sherpa</h3>
+            <p class="artist-role">Global Dance Icon</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Alexander Noel -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/alexander_noel_janam/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/alexander-noel.jpg" alt="Alexander Noel" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">Alexander Noel</h3>
+            <p class="artist-role">Global Dance Icon</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Sonali Bhaduria -->
+      <div class="artist-card">
+        <a href="https://www.instagram.com/sonali.bhadauria/" target="_blank" rel="noopener">
+          <div class="artist-accent"></div>
+          <img src="assets/prabhudeva/posters/sonali.webp" alt="Sonali Bhaduria" class="artist-img" />
+          <div class="artist-overlay"></div>
+          <div class="artist-ig"><div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div></div>
+          <div class="artist-info">
+            <h3 class="artist-name">Sonali Bhaduria</h3>
+            <p class="artist-role">Global Dance Icon</p>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
