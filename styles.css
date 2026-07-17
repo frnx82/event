@@ -1233,9 +1233,11 @@ img { max-width: 100%; display: block; }
   left: 0;
   right: 0;
   overflow: hidden;
-  background: linear-gradient(180deg, rgba(10,10,15,0.98) 0%, rgba(18,15,25,0.98) 100%);
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: transparent;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   height: 56px;
   z-index: 999;
 }
@@ -1252,11 +1254,11 @@ img { max-width: 100%; display: block; }
 }
 .artist-ticker-wrapper::before {
   left: 0;
-  background: linear-gradient(90deg, rgba(10,10,15,1) 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(10,10,15,0.6) 0%, transparent 100%);
 }
 .artist-ticker-wrapper::after {
   right: 0;
-  background: linear-gradient(270deg, rgba(10,10,15,1) 0%, transparent 100%);
+  background: linear-gradient(270deg, rgba(10,10,15,0.6) 0%, transparent 100%);
 }
 
 .artist-ticker-track {
