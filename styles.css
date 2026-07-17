@@ -211,6 +211,51 @@ img { max-width: 100%; display: block; }
 }
 
 /* ── Urgency Badge (Blinker) ──────────────────────────── */
+
+/* ── WhatsApp Promo Strip ────────────────────────────── */
+.promo-whatsapp {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.promo-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.promo-label strong {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.promo-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.wa-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #25D366;
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+.wa-number:hover {
+  background: rgba(37, 211, 102, 0.15);
+  color: #5bea8c;
+  text-shadow: 0 0 8px rgba(37, 211, 102, 0.4);
+}
+
+.wa-sep {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.6rem;
+}
 .cta-urgency {
   display: inline-flex;
   align-items: center;
