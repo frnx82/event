@@ -1772,6 +1772,26 @@ img { max-width: 100%; display: block; }
     padding-top: 1.5rem;
   }
   .hero-cta { align-items: center; }
+  .cta-buttons { width: 100%; padding: 0 1rem; }
+  .btn-ticketmaster {
+    white-space: normal;
+    text-align: center;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    max-width: 340px;
+    justify-content: center;
+  }
+  .promo-numbers {
+    gap: 0.2rem;
+  }
+  .wa-number {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.35rem;
+  }
+  .promo-label {
+    font-size: 0.72rem;
+  }
   .hero-stats { justify-content: center; }
 
   .hero-subtitle { margin: 0 auto 2rem; }
