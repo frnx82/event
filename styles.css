@@ -322,7 +322,7 @@ img { max-width: 100%; display: block; }
   position: relative;
   background: var(--gradient-hero);
   overflow: hidden;
-  padding: 6rem 0 4rem;
+  padding: 10rem 0 4rem;
 }
 
 .hero-overlay {
@@ -1228,13 +1228,16 @@ img { max-width: 100%; display: block; }
 
 /* ── Artist Ticker (scrolling marquee) ─────────────────── */
 .artist-ticker-wrapper {
-  position: relative;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(10,10,15,0.98) 0%, rgba(18,15,25,0.98) 100%);
   border-top: 1px solid rgba(212, 175, 55, 0.2);
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   height: 56px;
-  z-index: 90;
+  z-index: 999;
 }
 
 .artist-ticker-wrapper::before,
