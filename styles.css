@@ -1645,7 +1645,7 @@ img { max-width: 100%; display: block; }
   .hero-section {
     flex-direction: column;
     text-align: center;
-    padding: 5rem 0 2.5rem;
+    padding: 7.5rem 0 2.5rem;
     min-height: auto;
   }
 
@@ -1666,7 +1666,7 @@ img { max-width: 100%; display: block; }
     order: 1;
     width: 100%;
     max-width: none;
-    height: 22vh;
+    height: 28vh;
     margin: 0;
     opacity: 1;
     right: auto;
@@ -1686,6 +1686,34 @@ img { max-width: 100%; display: block; }
 
   .hero-image-glow {
     display: none;
+  }
+
+  /* Ticker: smaller on mobile */
+  .artist-ticker-wrapper {
+    top: 50px;
+    height: 44px;
+  }
+  .artist-ticker-track {
+    height: 44px;
+  }
+  .ticker-photo {
+    width: 28px;
+    height: 28px;
+  }
+  .ticker-name {
+    font-size: 0.75rem;
+  }
+  .ticker-ig {
+    width: 14px;
+    height: 14px;
+  }
+  .ticker-artist {
+    padding: 0 1.2rem;
+    gap: 0.4rem;
+  }
+  .ticker-sep {
+    font-size: 0.4rem;
+    padding: 0 0.3rem;
   }
 
   .about-grid { grid-template-columns: 1fr; gap: 2rem; }
