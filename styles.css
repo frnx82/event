@@ -252,6 +252,17 @@ img { max-width: 100%; display: block; }
   text-shadow: 0 0 8px rgba(37, 211, 102, 0.4);
 }
 
+.wa-icon {
+  width: 14px;
+  height: 14px;
+  fill: #25D366;
+  vertical-align: -2px;
+  flex-shrink: 0;
+}
+.wa-number:hover .wa-icon {
+  fill: #5bea8c;
+}
+
 .wa-sep {
   color: rgba(255, 255, 255, 0.2);
   font-size: 0.6rem;
