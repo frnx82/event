@@ -1226,6 +1226,100 @@ img { max-width: 100%; display: block; }
   background: linear-gradient(90deg, transparent, hsla(42, 92%, 56%, 0.3), transparent);
 }
 
+/* ── Artist Ticker (scrolling marquee) ─────────────────── */
+.artist-ticker-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(10,10,15,0.98) 0%, rgba(18,15,25,0.98) 100%);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  height: 56px;
+  z-index: 90;
+}
+
+.artist-ticker-wrapper::before,
+.artist-ticker-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.artist-ticker-wrapper::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(10,10,15,1) 0%, transparent 100%);
+}
+.artist-ticker-wrapper::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(10,10,15,1) 0%, transparent 100%);
+}
+
+.artist-ticker-track {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  animation: ticker-scroll 25s linear infinite;
+  width: max-content;
+}
+.artist-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-artist {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 1.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.ticker-artist:hover { opacity: 0.8; }
+
+.ticker-photo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  flex-shrink: 0;
+}
+
+.ticker-name {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.03em;
+}
+
+.ticker-ig {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.ticker-ig svg {
+  width: 100%;
+  height: 100%;
+  fill: url(#ig-grad);
+}
+
+.ticker-sep {
+  color: rgba(212, 175, 55, 0.4);
+  font-size: 0.5rem;
+  padding: 0 0.5rem;
+  flex-shrink: 0;
+}
+
 .lineup-grid {
   display: flex;
   flex-wrap: wrap;
