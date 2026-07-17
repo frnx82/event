@@ -1227,10 +1227,15 @@ img { max-width: 100%; display: block; }
 }
 
 .lineup-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1.5rem;
-  justify-items: center;
+}
+
+.lineup-grid .artist-card {
+  flex: 0 1 calc(25% - 1.5rem);
+  min-width: 200px;
 }
 
 .artist-card {
@@ -1517,7 +1522,7 @@ img { max-width: 100%; display: block; }
 
   .details-grid { grid-template-columns: repeat(2, 1fr); }
   .partners-grid { grid-template-columns: repeat(3, 1fr); }
-  .lineup-grid { grid-template-columns: repeat(3, 1fr); }
+  .lineup-grid .artist-card { flex: 0 1 calc(33.333% - 1.5rem); }
 }
 
 @media (max-width: 768px) {
@@ -1592,7 +1597,7 @@ img { max-width: 100%; display: block; }
   .register-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .partners-grid { grid-template-columns: repeat(2, 1fr); }
-  .lineup-grid { grid-template-columns: repeat(2, 1fr); }
+  .lineup-grid .artist-card { flex: 0 1 calc(50% - 1.5rem); min-width: 150px; }
   .artist-info { padding: 1rem; }
   .ig-icon { width: 24px; height: 24px; border-radius: 6px; }
   .ig-icon svg { width: 14px; height: 14px; }
@@ -1616,7 +1621,8 @@ img { max-width: 100%; display: block; }
   .hero-stats { gap: 1rem; }
   .about-achievements { grid-template-columns: 1fr; gap: 1rem; }
   .partners-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .lineup-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .lineup-grid { gap: 0.75rem; }
+  .lineup-grid .artist-card { flex: 0 1 calc(50% - 0.75rem); min-width: 120px; }
   .artist-name { font-size: 0.9rem; }
   .artist-role { font-size: 0.7rem; }
   .artist-info { padding: 0.75rem; }
