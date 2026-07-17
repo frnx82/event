@@ -1645,7 +1645,7 @@ img { max-width: 100%; display: block; }
   .hero-section {
     flex-direction: column;
     text-align: center;
-    padding: 7.5rem 0 2.5rem;
+    padding: 6rem 0 2.5rem;
     min-height: auto;
   }
 
@@ -1666,7 +1666,7 @@ img { max-width: 100%; display: block; }
     order: 1;
     width: 100%;
     max-width: none;
-    height: 28vh;
+    height: 24vh;
     margin: 0;
     opacity: 1;
     right: auto;
